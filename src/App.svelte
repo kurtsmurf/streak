@@ -1,12 +1,17 @@
 <script>
-  import { differenceInDays } from "date-fns";
+  import { differenceInDays, startOfDay } from "date-fns";
 
   let streak = parseInt(localStorage.getItem("streak") || "0");
   let last_session_millis = parseInt(
     localStorage.getItem("last_session_millis") || "0"
   );
 
-  if (differenceInDays(new Date(), new Date(last_session_millis)) > 1) {
+  const elapsed_days = differenceInDays(
+    startOfDay(new Date()),
+    startOfDay(new Date(last_session_millis)),
+  )
+
+  if (elapsed_days > 1) {
     streak = 0;
     localStorage.setItem("streak", "0");
   }
@@ -16,7 +21,7 @@
 
   let start_millis;
   let progress = 0;
-  let state = "READY";
+  let state = elapsed_days < 1 ? "FINISHED" : "READY";
   let intervalRef;
 
   function start() {
