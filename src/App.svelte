@@ -1,6 +1,15 @@
 <script>
-  let streak = parseInt(localStorage.getItem("streak")) || 0;
-  // let last_date = new Date(localStorage.getItem('last_date') || 0)
+  import { differenceInDays } from "date-fns";
+
+  let streak = parseInt(localStorage.getItem("streak") || "0");
+  let last_session_millis = parseInt(
+    localStorage.getItem("last_session_millis") || "0"
+  );
+
+  if (differenceInDays(new Date(), new Date(last_session_millis)) > 1) {
+    streak = 0;
+    localStorage.setItem("streak", "0");
+  }
 
   const duration_minutes = streak + 1;
   const duration_millis = duration_minutes * 60_000;
@@ -23,7 +32,7 @@
     state = "FINISHED";
     clearInterval(intervalRef);
     localStorage.setItem("streak", (streak + 1).toString());
-    // localStorage.setItem("last_date", Date.now().toString());
+    localStorage.setItem("last_session_millis", Date.now().toString());
   }
 
   function cancel() {
