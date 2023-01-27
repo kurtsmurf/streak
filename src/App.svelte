@@ -1,0 +1,70 @@
+<script>
+  let streak = parseInt(localStorage.getItem("streak")) || 0;
+  // let last_date = new Date(localStorage.getItem('last_date') || 0)
+
+  const duration_minutes = streak + 1;
+  const duration_millis = duration_minutes * 60_000;
+
+  let start_millis;
+  let progress = 0;
+  let state = "READY";
+  let intervalRef;
+
+  function start() {
+    state = "IN_PROGRESS";
+    start_millis = Date.now();
+    intervalRef = setInterval(() => {
+      progress = (Date.now() - start_millis) / duration_millis;
+      if (progress >= 1) finish();
+    }, 100);
+  }
+
+  function finish() {
+    state = "FINISHED";
+    clearInterval(intervalRef);
+    localStorage.setItem("streak", (streak + 1).toString());
+    // localStorage.setItem("last_date", Date.now().toString());
+  }
+
+  function cancel() {
+    state = "READY";
+    clearInterval(intervalRef);
+  }
+</script>
+
+<main>
+  <div class="howdy">
+    {#if state === "READY"}
+      <h1>
+        Today's session will last {duration_minutes}
+        minute{duration_minutes > 1 ? "s" : ""}.
+      </h1>
+      <button on:click={start}>Begin</button>
+    {:else if state === "IN_PROGRESS"}
+      <progress max="1" value={progress} />
+      <button on:click={cancel}>Cancel</button>
+    {:else if state === "FINISHED"}
+      <h1>Today's session is finished.</h1>
+      <p>Come back tomorrow to extend your streak.</p>
+    {/if}
+  </div>
+</main>
+
+<style>
+  main {
+    display: grid;
+    align-content: center;
+    height: 100%;
+    padding: 3rem;
+    font-size: larger;
+  }
+  .howdy {
+    display: grid;
+    gap: 1rem;
+  }
+  button {
+    font-size: inherit;
+    padding: 0.5rem;
+    width: min-content;
+  }
+</style>
