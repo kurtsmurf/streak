@@ -1,5 +1,6 @@
 <script>
   import { differenceInDays, startOfDay } from "date-fns";
+  import soundUrl from "./assets/ding.mp3"
 
   let streak = parseInt(localStorage.getItem("streak") || "0");
   let last_session_millis = parseInt(
@@ -25,6 +26,7 @@
   let intervalRef;
 
   function start() {
+    new Audio(soundUrl).play();
     state = "IN_PROGRESS";
     start_millis = Date.now();
     intervalRef = setInterval(() => {
@@ -34,6 +36,7 @@
   }
 
   function finish() {
+    new Audio(soundUrl).play();
     state = "FINISHED";
     clearInterval(intervalRef);
     localStorage.setItem("streak", (streak + 1).toString());
