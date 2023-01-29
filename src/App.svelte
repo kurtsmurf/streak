@@ -2,15 +2,16 @@
   import { differenceInDays, startOfDay } from "date-fns";
   import soundUrl from "./assets/ding.mp3"
 
-  let streak = parseInt(localStorage.getItem("streak") || "0");
-  let last_session_millis = parseInt(
+  let streak = parseInt(
+    localStorage.getItem("streak") || "0"
+  );
+  const last_session_millis = parseInt(
     localStorage.getItem("last_session_millis") || "0"
   );
-
   const elapsed_days = differenceInDays(
     startOfDay(new Date()),
     startOfDay(new Date(last_session_millis)),
-  )
+  );
 
   if (elapsed_days > 1) {
     streak = 0;
